@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 func WordCount(str string) int {
@@ -112,8 +113,26 @@ func ConsonantsCount(str string) int {
 	return consonants
 }
 
-func main() {
+func ParaCount(str string) int {
+	para := 0
+	newlineCount := 0
 
+	for i := 0; i < len(str); i++ {
+		if str[i] == '\n' {
+			newlineCount++
+		} else if newlineCount >= 2 {
+			para++
+			newlineCount = 0
+		}
+	}
+	if newlineCount < 2 {
+		para++
+	}
+	return para
+}
+
+func main() {
+	start := time.Now()
 	fmt.Println("Reading file")
 	file_name := "Dummy_text.txt"
 	data, err := os.ReadFile(file_name)
@@ -141,4 +160,8 @@ func main() {
 
 	fmt.Println("Special Characters are : ", SpecialCharactersCount(str))
 
+	// fmt.Println("Paragraphs are : ", ParaCount(str))
+
+	elapse := time.Since(start)
+	fmt.Printf("The total time it takes is : %s", elapse)
 }
