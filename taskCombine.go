@@ -71,12 +71,15 @@ func main() {
 
 	chunkSize := totalLength / parts
 
-	fmt.Println(73, chunkSize)
+	fmt.Println("Chunck size: ", chunkSize)
 
 	chunks := make([]string, parts)
-	// ch:=make(map[chan int] parts)
+	ch1 := make(chan string, 1)
+	ch2 := make(chan string, 1)
+	ch3 := make(chan string, 1)
+	ch4 := make(chan string, 1)
 
-	// var wg sync.WaitGroup
+	var wg sync.WaitGroup
 
 	for i := 0; i < parts; i++ {
 		startChunk := i * chunkSize     //0*10=0
@@ -87,16 +90,43 @@ func main() {
 		}
 		chunks[i] = str[startChunk:endChunk] // chunk[0]=str[0:10]
 
-		// wg.Add(parts)
-		// go func(index int, chunkData string) {
-		words, digits, specChar, lines, spaces, sentences, punctuation, consonants, vowels := CombineFunctions(chunks[i])
-		fmt.Println("\n\nChunks \n", i+1)
-		fmt.Println("Words are: ", words, "\nSpecial Characters are: ", specChar, "\nLines are: ", lines, "\nSpaces are: ", spaces, "\nSentences ", sentences, "\nPunctuation are: ", punctuation, "\nConsonants are: ", consonants, "\nVowels : ", vowels, "\nDigits are : ", digits)
-		// defer wg.Done()
-		// ch<-CombineFunction(chunks[])
-		// }(i, chunks[i])
-		// wg.Wait()
+		go func(i int, chunkData string) {
+			wg.Add(1)
+			defer wg.Done()
+			words, digits, specChar, lines, spaces, sentences, punctuation, consonants, vowels := CombineFunctions(chunkData)
+			fmt.Println("\n\nChunks \n", i+1)
+			result := fmt.Sprintf("Words are: %d\nSpecial Characters are: %d\nLines are: %d\nSpaces are: %d\nSentences: %d\nPunctuation are: %d\nConsonants are: %d\nVowels: %d\nDigits are: %d",
+				words, specChar, lines, spaces, sentences, punctuation, consonants, vowels, digits)
+			ch1 <- result
+			ch2 <- result
+			ch3 <- result
+			ch4 <- result
+
+		}(i, chunks[i])
+
+		go CombineFunctions(str, chunks[])
+
+		output1 := <-ch1
+		output2 := <-ch2
+		output3 := <-ch3
+		output4 := <-ch4
+
+		fmt.Println(output1)
+		fmt.Println(output2)
+		fmt.Println(output3)
+		fmt.Println(output4)
+
+		// go func() {
+
+		// 	close(ch)
+		// }()
+
+		// for result := range ch {
+		// 	fmt.Println(result)
+		// }
+
 	}
+	wg.Wait()
 
 	fmt.Println("Chunk size is  divided into ", parts, " parts: ", chunkSize)
 
