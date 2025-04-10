@@ -3,131 +3,53 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
 	"time"
 )
 
-// type ConditionFunction func(byte) bool
+func CombineFunctions(str string) (int, int, int, int, int, int, int, int, int) {
 
-// func CombineFunctions(str string, condition ConditionFunction) int {
-// 	words := 0
-// 	for i := 0; i < len(str); i++ {
-// 		if condition(str[i]) {
-// 			words++
-// 		}
-// 	}
-// 	return words
-// }
-
-// func CountVowels(ch byte) bool {
-// 	switch ch {
-// 	case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountSentences(ch byte) bool {
-// 	if ch == '.' {
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountWords(ch byte) bool {
-// 	if ch == ' ' {
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountCharacters(ch byte) bool {
-// 	switch ch {
-// 	case '@', '{', '}', '[', ']', '*', '&', '$', '+', '-', '^', '(', ')', '#', '%', '`':
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountSpaces(ch byte) bool {
-// 	if ch == ' ' {
-// 		return true
-// 	}
-// 	return false
-// }
-// func CountDigits(ch byte) bool {
-// 	if ch >= '0' && ch <= '9' {
-// 		return true
-// 	}
-// 	return false
-// }
-// func CountPunctuation(ch byte) bool {
-// 	if ch == ':' || ch == ';' || ch == ',' || ch == '!' || ch == '.' || ch == '"' || ch == '?' || ch == '/' {
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountConsonants(ch byte) bool {
-// 	if ch != 'a' && ch != 'e' && ch != 'i' && ch != 'o' && ch != 'u' && ch != 'A' && ch != 'E' && ch != 'I' && ch != 'O' && ch != 'U' {
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func CountLines(ch byte) bool {
-// 	if ch == '\n' {
-// 		return true
-// 	}
-// 	return false
-// }
-
-func AnotherCombineFunction(str string, mode string) int {
 	words := 0
-	for i := 0; i < len(str); i++ {
-		switch mode {
-		case "vowels":
-			switch str[i] {
-			case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
-				words++
-			}
-		case "digits":
-			if str[i] >= '0' && str[i] <= '9' {
-				words++
-			}
-		case "words":
-			if str[i] == ' ' {
-				words++
-			}
-		case "sentences":
-			if str[i] == '.' {
-				words++
-			}
-		case "characters":
-			switch str[i] {
-			case '@', '{', '}', '[', ']', '*', '&', '$', '+', '-', '^', '(', ')', '#', '%', '`':
-				words++
-			}
-		case "spaces":
-			if str[i] == ' ' {
-				words++
-			}
-		case "punc":
-			if str[i] == ':' || str[i] == ';' || str[i] == ',' || str[i] == '!' || str[i] == '.' || str[i] == '"' || str[i] == '?' || str[i] == '/' {
-				words++
-			}
-		case "lines":
-			if str[i] == '\n' {
-				words++
-			}
-		case "consonants":
-			if str[i] != 'a' && str[i] != 'e' && str[i] != 'i' && str[i] != 'o' && str[i] != 'u' && str[i] != 'A' && str[i] != 'E' && str[i] != 'I' && str[i] != 'O' && str[i] != 'U' {
-				words++
-			}
+	vowels := 0
+	digits := 0
+	SpecialChar := 0
+	lines := 0
+	spaces := 0
+	sentences := 0
+	Punctuation := 0
+	consonants := 0
 
+	for i := 0; i < len(str); i++ {
+		if str[i] == ' ' {
+			spaces++
+		}
+		if str[i] == ' ' {
+			words++
+		} else if str[i] == '.' {
+			sentences++
+		}
+		switch str[i] {
+		case '@', '{', '}', '[', ']', '*', '&', '$', '+', '-', '^', '(', ')', '#', '%', '`':
+			SpecialChar++
+		}
+		if str[i] >= '0' && str[i] <= '9' {
+			digits++
+		} else if str[i] == ':' || str[i] == ';' || str[i] == ',' || str[i] == '!' || str[i] == '.' || str[i] == '"' || str[i] == '?' || str[i] == '/' {
+			Punctuation++
+		} else if str[i] == '\n' {
+			lines++
+		}
+		switch str[i] {
+		case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+			vowels++
+		}
+		if str[i] != 'a' && str[i] != 'e' && str[i] != 'i' && str[i] != 'o' && str[i] != 'u' && str[i] != 'A' && str[i] != 'E' && str[i] != 'I' && str[i] != 'O' && str[i] != 'U' {
+			consonants++
 		}
 
 	}
-	return words
+
+	return words, digits, SpecialChar, lines, spaces, sentences, Punctuation, consonants, vowels
 
 }
 
@@ -139,32 +61,44 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// fmt.Printf("File content %s", data)
 	fmt.Println("File Length :", len(data))
 
 	str := string(data)
-	// combinechannel := make(chan int)
-	// totalword := AnotherCombineFunction(str, "words", combinechannel)
-	// totalword := combinechannel
-	fmt.Println("Words are : ", AnotherCombineFunction(str, "words"))
 
-	fmt.Println("Sentences are : ", AnotherCombineFunction(str, "sentences"))
+	totalLength := len(str)
 
-	fmt.Println("Digits are : ", AnotherCombineFunction(str, "digits"))
+	parts := 4
 
-	fmt.Println("Punctuation are : ", AnotherCombineFunction(str, "punc"))
+	chunkSize := totalLength / parts
 
-	fmt.Println("Lines are : ", AnotherCombineFunction(str, "lines"))
+	fmt.Println(73, chunkSize)
 
-	fmt.Println("Vowels are : ", AnotherCombineFunction(str, "vowels"))
+	chunks := make([]string, parts)
+	// ch:=make(map[chan int] parts)
 
-	fmt.Println("Consonants are : ", AnotherCombineFunction(str, "consonants"))
+	// var wg sync.WaitGroup
 
-	fmt.Println("Spaces are : ", AnotherCombineFunction(str, "spaces"))
+	for i := 0; i < parts; i++ {
+		startChunk := i * chunkSize     //0*10=0
+		endChunk := (i + 1) * chunkSize //(0+1)*10=10
 
-	fmt.Println("Special Characters are : ", AnotherCombineFunction(str, "characters"))
+		if i == parts-1 {
+			endChunk = totalLength
+		}
+		chunks[i] = str[startChunk:endChunk] // chunk[0]=str[0:10]
 
-	fmt.Println("Paragraphs are : ", ParaCount(str))
+		// wg.Add(parts)
+		// go func(index int, chunkData string) {
+		words, digits, specChar, lines, spaces, sentences, punctuation, consonants, vowels := CombineFunctions(chunks[i])
+		fmt.Println("\n\nChunks \n", i+1)
+		fmt.Println("Words are: ", words, "\nSpecial Characters are: ", specChar, "\nLines are: ", lines, "\nSpaces are: ", spaces, "\nSentences ", sentences, "\nPunctuation are: ", punctuation, "\nConsonants are: ", consonants, "\nVowels : ", vowels, "\nDigits are : ", digits)
+		// defer wg.Done()
+		// ch<-CombineFunction(chunks[])
+		// }(i, chunks[i])
+		// wg.Wait()
+	}
+
+	fmt.Println("Chunk size is  divided into ", parts, " parts: ", chunkSize)
 
 	elapse := time.Since(start)
 	fmt.Printf("The total time it takes is : %s", elapse)

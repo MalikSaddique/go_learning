@@ -172,40 +172,39 @@ func main() {
 
 	defer data.Close()
 
-	chunkSize := 0
+	chunkSize := 1024
 	buffer := make([]byte, chunkSize)
 
-	for {
-		bytesRead, err := data.Read(buffer)
-		if err != nil && err != io.EOF {
-			fmt.Println("Error reading file:", err)
-			return
-		}
-		startChunks := 1000
-		endChunks := 5000
-		chunkSize := 1
-
-		if chunkSize >= startChunks && chunkSize <= endChunks {
-			chunks := buffer[:bytesRead]
-			IsVowels := VowelsC(chunks)
-
-			isLines := LinesC(chunks)
-			isSpaces := SpacesC(chunks)
-
-			fmt.Println("Vowels are : ", IsVowels)
-			fmt.Println("Lines are : ", isLines)
-			fmt.Println("Words are : ", isSpaces)
-		}
-
-		// fmt.Printf("File content %s", data)
-		// fmt.Println("File Length :", len(data))
-		// str := string(data)
-
-		if chunkSize > endChunks {
-			break
-		}
-		chunkSize++
+	// for {
+	bytesRead, err := data.Read(buffer)
+	if err != nil && err != io.EOF {
+		fmt.Println("Error reading file:", err)
+		return
 	}
+	startChunks := 1000
+	endChunks := 5000
+	chunkNo := 1
+
+	if chunkNo >= startChunks && chunkNo <= endChunks {
+		chunks := buffer[:bytesRead]
+		IsVowels := VowelsC(chunks)
+
+		isLines := LinesC(chunks)
+		isSpaces := SpacesC(chunks)
+
+		fmt.Println("Vowels are : ", IsVowels)
+		fmt.Println("Lines are : ", isLines)
+		fmt.Println("Words are : ", isSpaces)
+	}
+
+	// fmt.Printf("File content %s", data)
+	// fmt.Println("File Length :", len(data))
+	// str := string(data)
+
+	// if chunkNo > endChunks {
+	// 	break
+	// }
+	chunkNo++
 
 	// combinechannel := make(chan int)
 	// totalword := AnotherCombineFunction(str, "words", combinechannel)
