@@ -104,7 +104,7 @@ func main() {
 
 		}(i, chunks[i])
 
-		go CombineFunctions(str, chunks[])
+		go CombineFunctions(str)
 
 		output1 := <-ch1
 		output2 := <-ch2
