@@ -9,7 +9,7 @@ import (
 
 func CombineFunctions(str string) (int, int, int, int, int, int, int, int, int) {
 
-	words := 0
+	words := 0 
 	vowels := 0
 	digits := 0
 	SpecialChar := 0
@@ -74,10 +74,7 @@ func main() {
 	fmt.Println("Chunck size: ", chunkSize)
 
 	chunks := make([]string, parts)
-	ch1 := make(chan string, 1)
-	ch2 := make(chan string, 1)
-	ch3 := make(chan string, 1)
-	ch4 := make(chan string, 1)
+	ch := make(chan string, 4)
 
 	var wg sync.WaitGroup
 
@@ -97,24 +94,15 @@ func main() {
 			fmt.Println("\n\nChunks \n", i+1)
 			result := fmt.Sprintf("Words are: %d\nSpecial Characters are: %d\nLines are: %d\nSpaces are: %d\nSentences: %d\nPunctuation are: %d\nConsonants are: %d\nVowels: %d\nDigits are: %d",
 				words, specChar, lines, spaces, sentences, punctuation, consonants, vowels, digits)
-			ch1 <- result
-			ch2 <- result
-			ch3 <- result
-			ch4 <- result
+			ch <- result
 
 		}(i, chunks[i])
 
 		go CombineFunctions(str)
 
-		output1 := <-ch1
-		output2 := <-ch2
-		output3 := <-ch3
-		output4 := <-ch4
+		output1 := <-ch
 
 		fmt.Println(output1)
-		fmt.Println(output2)
-		fmt.Println(output3)
-		fmt.Println(output4)
 
 		// go func() {
 
