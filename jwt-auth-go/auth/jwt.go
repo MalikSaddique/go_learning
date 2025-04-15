@@ -8,12 +8,13 @@ import (
 )
 
 var secretKey = []byte("secret-key")
+var refreshSecretKey = []byte("my_refresh_secret_key")
 
 func CreateToken(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email": email,
-			"exp":   time.Now().Add(time.Hour * 24).Unix(),
+			"exp":   time.Now().Add(time.Minute * 1).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)
@@ -39,3 +40,19 @@ func VerifyToken(tokenString string) error {
 
 	return nil
 }
+
+// func RefreshToken(email string) (string, error) {
+// 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256,
+// 		jwt.MapClaims{
+// 			"email": email,
+// 			"exp":   time.Now().Add(time.Hour * 24 * 7).Unix(),
+// 		})
+
+// 	refreshTokenString, err := refreshToken.SignedString([]byte(refreshSecretKey))
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return refreshTokenString, nil
+
+// }
+
