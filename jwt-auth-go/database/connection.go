@@ -9,8 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func DbConnection() {
-
+func DbConnection() *sql.DB {
 	host := os.Getenv("DB_HOST")
 	portStr := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
@@ -20,7 +19,7 @@ func DbConnection() {
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
 		fmt.Println("Error converting port to integer:", err)
-		return
+		return nil
 	}
 
 	psqlconn := fmt.Sprintf(
@@ -31,15 +30,15 @@ func DbConnection() {
 	db, err := sql.Open("postgres", psqlconn)
 	if err != nil {
 		fmt.Println("Error opening DB connection:", err)
-		return
+		return nil
 	}
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
 		fmt.Println("Failed to connect to database:", err)
-		return
+		return nil
 	}
 
 	fmt.Println("Connected to PostgreSQL successfully!")
+	return db
 }

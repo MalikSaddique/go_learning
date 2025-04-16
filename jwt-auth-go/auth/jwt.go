@@ -40,19 +40,3 @@ func VerifyToken(tokenString string) error {
 
 	return nil
 }
-
-// func RefreshToken(email string) (string, error) {
-// 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256,
-// 		jwt.MapClaims{
-// 			"email": email,
-// 			"exp":   time.Now().Add(time.Hour * 24 * 7).Unix(),
-// 		})
-
-// 	refreshTokenString, err := refreshToken.SignedString([]byte(refreshSecretKey))
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return refreshTokenString, nil
-
-// }
-

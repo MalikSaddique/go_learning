@@ -3,36 +3,49 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/MalikSaddique/go_learning/jwt-auth-go/analyzer"
 	"github.com/MalikSaddique/go_learning/jwt-auth-go/auth"
+	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
+	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
 var secretKey = []byte("secret-key")
 var refreshSecretKey = []byte("my_refresh_secret_key")
-var hardCodedEmail = "email@123.com"
-var hardCodedPassword = "12345"
 
 type UserInfo struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
+//handle login
+
 func HandleLogin(c *gin.Context) {
 	var u UserInfo
-	// w.Header().Set("Content-Type", "application/json")
+	var dbEmail, dbPassword string
+	db := connection.DbConnection()
 
 	err := json.NewDecoder(c.Request.Body).Decode(&u)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON token"})
 	}
 
-	if u.Email != hardCodedEmail || u.Password != hardCodedPassword {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized Access"})
+	query := `SELECT email, password FROM users WHERE email = $1`
+	err = db.QueryRow(query, u.Email).Scan(&dbEmail, &dbPassword)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		return
+	}
+
+	if dbPassword != u.Password {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 	tokenString, err := auth.CreateToken(u.Email)
@@ -57,8 +70,11 @@ func HandleLogin(c *gin.Context) {
 
 }
 
+//protected handler
+
 func ProtectedHandler(c *gin.Context) {
-	// w.Header().Set("Content-Type", "application/json")
+	db := connection.DbConnection()
+
 	tokenString := c.GetHeader("Authorization")
 	if tokenString == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization header"})
@@ -70,11 +86,22 @@ func ProtectedHandler(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Token"})
 		return
 	}
+	result, err := analyzer.AnalyzeFile("Dummy_text.txt")
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Failed to read file"})
+		return
+	}
+
+	err = connection.SaveResult(db, result)
+	if err != nil {
+		log.Fatal("Failed to save the results")
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Welcome! You are authorized",
+		"message": "Data saved successfully",
 	})
 }
 
+//refresh token handler
 
 func HandleRefresh(c *gin.Context) {
 	refreshTokenString := c.GetHeader("Authorization")
@@ -113,4 +140,32 @@ func HandleRefresh(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid refresh token"})
 	}
+
 }
+
+//signup handling
+
+func SignUp(c *gin.Context) {
+	var user models.User
+	err := json.NewDecoder(c.Request.Body).Decode(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	db := connection.DbConnection()
+
+	query := `INSERT INTO users (email, password) VALUES ($1, $2) RETURNING email`
+	err = db.QueryRow(query, user.Email, user.Password).Scan(&user.Email, &user.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User already existed with this email"})
+		fmt.Println(err)
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "User created successfully",
+		"email":   user.Email,
+	})
+}
+
+//result handling
