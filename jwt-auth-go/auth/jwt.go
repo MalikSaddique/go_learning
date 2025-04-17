@@ -10,11 +10,12 @@ import (
 var secretKey = []byte("secret-key")
 var refreshSecretKey = []byte("my_refresh_secret_key")
 
-func CreateToken(email string) (string, error) {
+func CreateToken(email string, id int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"email": email,
-			"exp":   time.Now().Add(time.Minute * 1).Unix(),
+			"email":   email,
+			"user_id": id,
+			"exp":     time.Now().Add(time.Minute * 1).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)
@@ -25,18 +26,18 @@ func CreateToken(email string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return secretKey, nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return nil
+	return token, nil
 }

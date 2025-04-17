@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	_ "github.com/lib/pq"
 )
 
-func DbConnection() *sql.DB {
+func DbConnection() (*sql.DB, error) {
+
 	host := os.Getenv("DB_HOST")
 	portStr := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
@@ -18,27 +17,24 @@ func DbConnection() *sql.DB {
 
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
-		fmt.Println("Error converting port to integer:", err)
-		return nil
+		return nil, fmt.Errorf("error converting port to integer: %v", err)
 	}
 
-	psqlconn := fmt.Sprintf(
+	dsn := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname,
 	)
 
-	db, err := sql.Open("postgres", psqlconn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		fmt.Println("Error opening DB connection:", err)
-		return nil
+		return nil, fmt.Errorf("failed to connect to database: %v", err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		fmt.Println("Failed to connect to database:", err)
-		return nil
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("database ping failed: %v", err)
 	}
 
-	fmt.Println("Connected to PostgreSQL successfully!")
-	return db
+	fmt.Println("Connected to PostgreSQL with database/sql!")
+	return db, nil
 }

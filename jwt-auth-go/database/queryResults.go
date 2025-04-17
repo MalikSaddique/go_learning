@@ -11,8 +11,8 @@ import (
 func SaveResult(db *sql.DB, result analyzer.Result) error {
 	query := `
 		INSERT INTO results 
-		(words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+		(words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels, user_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
 	_, err := db.Exec(query,
 		result.Words,
@@ -24,6 +24,7 @@ func SaveResult(db *sql.DB, result analyzer.Result) error {
 		result.Punctuation,
 		result.Consonants,
 		result.Vowels,
+		result.ID,
 	)
 
 	if err != nil {

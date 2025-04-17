@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/analyzer"
+	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
 	handler "github.com/MalikSaddique/go_learning/jwt-auth-go/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -19,20 +20,17 @@ func main() {
 
 	r := gin.Default()
 
+	connection.DbConnection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+		return
+	}
+
 	r.POST("/signup", handler.SignUp)
 	r.POST("/login", handler.HandleLogin)
 	r.GET("/protected", handler.ProtectedHandler)
 	r.POST("/refresh", handler.HandleRefresh)
-
-	// Posting Task
-	r.POST("/analyze", func(c *gin.Context) {
-		result, err := analyzer.AnalyzeFile("Dummy_text.txt")
-		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to read file"})
-			return
-		}
-		c.JSON(200, result)
-	})
+	r.GET("/getdata/:user_id", handler.GetResults)
 
 	// Start the server
 	r.Run(":8000")

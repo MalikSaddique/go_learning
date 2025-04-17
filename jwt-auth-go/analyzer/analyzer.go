@@ -5,6 +5,7 @@ import (
 )
 
 type Result struct {
+	ID          int `json:"user_id"`
 	Words       int `json:"words"`
 	Digits      int `json:"digits"`
 	SpecialChar int `json:"special_char"`

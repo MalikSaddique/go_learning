@@ -4,7 +4,8 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Email    string `json:"email" gorm:"unique"`
-	Password string `json:"password"`
-	Results  []Result
+	Id       int      `json:"id"`
+	Email    string   `json:"email" gorm:"unique"`
+	Password string   `json:"password"`
+	Results  []Result `gorm:"foreignKey:UserID"`
 }
