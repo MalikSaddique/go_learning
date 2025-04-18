@@ -11,6 +11,7 @@ var secretKey = []byte("secret-key")
 var refreshSecretKey = []byte("my_refresh_secret_key")
 
 func CreateToken(email string, id int) (string, error) {
+	fmt.Println("datta", id)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email":   email,

@@ -26,7 +26,7 @@ import (
 // @name token
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8001
+// @host localhost:8002
 // @schemes http
 
 // @securityDefinitions.apikey BearerAuth
@@ -56,5 +56,5 @@ func main() {
 	r.GET("/getdata/:user_id", handler.GetResults)
 
 	// Start the server
-	r.Run(":8001")
+	r.Run(":8002")
 }

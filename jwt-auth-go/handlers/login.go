@@ -38,15 +38,18 @@ func HandleLogin(c *gin.Context) {
 
 	// var user models.User
 	var user UserInfo
-	fmt.Println("Looking up email:", u.Email)
-	row := db.QueryRow("SELECT * FROM users WHERE email = $1", u.Email)
+	var userID int64
+	var dbPass, dbEmail string
 
-	err = row.Scan(
-		&user.Id,
-		&user.Email,
-		&user.Password,
-	)
-	fmt.Println("User ID from DB:", user.Id)
+	fmt.Println("Looking up email:", u.Email)
+	err = db.QueryRow("SELECT *FROM users WHERE email = $1 ", u.Email).Scan(&userID, &dbEmail, &dbPass)
+	fmt.Println("error is ", err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "id not found"})
+		return
+	}
+
+	fmt.Println("User ID from DB:", userID)
 	if err == sql.ErrNoRows {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 		return
@@ -55,12 +58,12 @@ func HandleLogin(c *gin.Context) {
 		return
 	}
 
-	if user.Password != u.Password {
+	if dbPass != u.Password {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	tokenString, err := auth.CreateToken(u.Email, u.Id)
+	tokenString, err := auth.CreateToken(u.Email, int(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Token not generated"})
 		return
