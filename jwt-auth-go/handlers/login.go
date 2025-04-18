@@ -12,6 +12,16 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+// HandleLogin godoc
+// @Summary      Login a user
+// @Description  Authenticate user and return JWT token
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        user  body  models.User  true  "User Credentials"
+// @Success      200
+// @Failure      401
+// @Router       /login [post]
 func HandleLogin(c *gin.Context) {
 	var u UserInfo
 	if err := c.ShouldBindJSON(&u); err != nil {

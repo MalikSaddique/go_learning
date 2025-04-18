@@ -22,8 +22,18 @@ type UserInfo struct {
 	Password string `json:"password"`
 }
 
-//protected handler
-
+// protected handler
+// ProtectedHandler godoc
+// @Summary      Protected endpoint for saving analyzed data
+// @Description  Requires JWT. Analyzes a text file and saves the result to the database.
+// @Tags         protected
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200
+// @Failure      400
+// @Failure      401
+// @Failure      500
+// @Router       /protected [get]
 func ProtectedHandler(c *gin.Context) {
 
 	db, err := connection.DbConnection()

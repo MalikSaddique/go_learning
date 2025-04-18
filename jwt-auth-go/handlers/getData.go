@@ -8,6 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetResults godoc
+// @Summary      Get Analysis Result
+// @Description  Retrieves analyzed text data from the database for the given user ID
+// @Tags         protected
+// @Security     BearerAuth
+// @Produce      json
+// @Param        user_id path string true "User ID"
+// @Success      200  "Result data retrieved"
+// @Failure      404  "Result not found"
+// @Failure      500  "Database connection failed"
+// @Router       /getdata/{user_id} [get]
 func GetResults(c *gin.Context) {
 	id := c.Param("user_id")
 
