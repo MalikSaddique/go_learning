@@ -9,6 +9,7 @@ import (
 )
 
 func SaveResult(db *sql.DB, result analyzer.Result) error {
+
 	query := `
 		INSERT INTO results 
 		(words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels, user_id)
@@ -24,7 +25,7 @@ func SaveResult(db *sql.DB, result analyzer.Result) error {
 		result.Punctuation,
 		result.Consonants,
 		result.Vowels,
-		result.ID,
+		result.UserID,
 	)
 
 	if err != nil {

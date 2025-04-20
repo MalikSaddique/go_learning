@@ -76,7 +76,7 @@ func ProtectedHandler(c *gin.Context) {
 		return
 	}
 
-	result.ID = userID
+	result.UserID = userID
 
 	err = connection.SaveResult(db, result)
 	if err != nil {
