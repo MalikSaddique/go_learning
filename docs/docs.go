@@ -127,7 +127,7 @@ const docTemplate = `{
             }
         },
         "/refresh": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -206,7 +206,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8001",
+	Host:             "localhost:8002",
 	BasePath:         "",
 	Schemes:          []string{"http"},
 	Title:            "File Analyzer APIs",

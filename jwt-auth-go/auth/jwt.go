@@ -11,12 +11,12 @@ var secretKey = []byte("secret-key")
 var refreshSecretKey = []byte("my_refresh_secret_key")
 
 func CreateToken(email string, id int) (string, error) {
-	fmt.Println("datta", id)
+	fmt.Println("User_id", id)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email":   email,
 			"user_id": id,
-			"exp":     time.Now().Add(time.Minute * 1).Unix(),
+			"exp":     time.Now().Add(time.Minute * 3).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)

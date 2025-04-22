@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Result struct {
 	gorm.Model
-	id          uint `json:"-"`
+	id          uint `json:"user_id"`
 	Words       int  `json:"words"`
 	Digits      int  `json:"digits"`
 	SpecialChar int  `json:"special_char"`

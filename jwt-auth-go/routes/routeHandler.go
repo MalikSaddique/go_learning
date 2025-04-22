@@ -14,6 +14,6 @@ func RoutesHandler(r *gin.Engine) {
 	r.POST("/signup", handler.SignUp)
 	r.POST("/login", handler.HandleLogin)
 	r.GET("/protected", handler.ProtectedHandler)
-	r.POST("/refresh", handler.HandleRefresh)
+	r.GET("/refresh", handler.HandleRefresh)
 	r.GET("/getdata/:user_id", handler.GetResults)
 }

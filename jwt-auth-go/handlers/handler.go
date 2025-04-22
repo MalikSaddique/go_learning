@@ -70,11 +70,12 @@ func ProtectedHandler(c *gin.Context) {
 	}
 	userID := int(userIDFloat)
 
-	result, err := analyzer.AnalyzeFile("Dummy_text.txt")
+	result, err := analyzer.AnalyzeFile("/jwt-auth-app/Dummy_text.txt")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to analyze file"})
 		return
 	}
+	fmt.Println(err)
 
 	result.UserID = userID
 

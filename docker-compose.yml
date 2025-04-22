@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: jwt-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1122
+      POSTGRES_DB: text_analysis_db
+    ports:
+      - "5432:5432"
+    volumes:
+        - go_learning_postgres_data:/var/lib/postgresql/data  
+    networks:
+      - jwt-network
+
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    container_name: jwt-auth-app
+    ports:
+      - "8002:8002"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 1122
+      DB_NAME: text_analysis_db
+    volumes:
+      - ./Dummy_text.txt:/jwt-auth-app/Dummy_text.txt
+    networks:
+      - jwt-network
+
+volumes:
+  go_learning_postgres_data:
+
+
+networks:
+  jwt-network:

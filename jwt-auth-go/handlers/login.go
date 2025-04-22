@@ -37,7 +37,7 @@ func HandleLogin(c *gin.Context) {
 	defer db.Close()
 
 	// var user models.User
-	var user UserInfo
+	// var user UserInfo
 	var userID int64
 	var dbPass, dbEmail string
 
@@ -71,7 +71,8 @@ func HandleLogin(c *gin.Context) {
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": u.Email,
-		"exp":   time.Now().Add(time.Hour * 24 * 7).Unix(),
+		// "user_id": u.Id,
+		"exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
 	})
 
 	refreshTokenString, err := refreshToken.SignedString([]byte(refreshSecretKey))
@@ -83,6 +84,5 @@ func HandleLogin(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"Access Token Key":  tokenString,
 		"Refresh Token Key": refreshTokenString,
-		"Unique Id":         user.Id,
 	})
 }
