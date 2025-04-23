@@ -2,10 +2,10 @@ package handler
 
 import (
 	"fmt"
-	"strconv"
 
 	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
 	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
+	utils "github.com/MalikSaddique/go_learning/jwt-auth-go/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,22 +25,11 @@ import (
 func GetResults(c *gin.Context) {
 	id := c.Param("user_id")
 
-	pageStr := c.DefaultQuery("page", "1")
-	limitStr := c.DefaultQuery("limit", "10")
-
-	page, err := strconv.Atoi(pageStr)
-	if err != nil || page < 1 {
-		page = 1
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil || limit < 1 {
-		limit = 10
-	}
-	offset := (page - 1) * limit
+	offset, limit, page := utils.PaginationHandler(c)
 
 	db, err := connection.DbConnection()
 	if err != nil {
-		fmt.Println("Database connection error:", err)
+		fmt.Println("Database connection errors:", err)
 		c.JSON(500, gin.H{"error": "Database connection failed"})
 		return
 	}

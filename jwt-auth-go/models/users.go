@@ -9,3 +9,9 @@ type User struct {
 	Password string   `json:"password"`
 	Results  []Result `gorm:"foreignKey:UserID"`
 }
+
+type UserLogin struct {
+	Id       int    `json:"id"`
+	Email    string `json:"email" gorm:"unique"`
+	Password string `json:"password"`
+}
