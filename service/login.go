@@ -4,9 +4,11 @@ import (
 	"errors"
 	"time"
 
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/auth"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/repository"
+	"github.com/MalikSaddique/go_learning/auth"
+	"github.com/MalikSaddique/go_learning/database"
+	"github.com/MalikSaddique/go_learning/models"
+
+	// "github.com/MalikSaddique/go_learning/repository"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -14,7 +16,7 @@ var user models.User
 var refreshSecretKey = []byte("my_refresh_secret_key")
 
 func LoginUser(email, password string) (string, string, error) {
-	user, err := repository.FindUserByEmail(email)
+	user, err := database.Storage.FindUserByEmail(email)
 	if err != nil {
 		return "", "", errors.New("User not found")
 	}
@@ -33,7 +35,7 @@ func LoginUser(email, password string) (string, string, error) {
 		"exp":   time.Now().Add(7 * 24 * time.Hour).Unix(),
 	})
 
-	refreshTokenString, err := refreshToken.SignedString([]byte(refreshSecretKey))
+	refreshTokenString, err := refreshToken.SignedString(refreshSecretKey)
 	if err != nil {
 		return "", "", errors.New("Failed to generate refresh token")
 	}

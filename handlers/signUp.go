@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
+	connection "github.com/MalikSaddique/go_learning/database"
+	"github.com/MalikSaddique/go_learning/models"
 	"github.com/gin-gonic/gin"
 )
 

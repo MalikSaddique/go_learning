@@ -30,8 +30,6 @@ services:
       DB_USER: postgres
       DB_PASSWORD: 1122
       DB_NAME: text_analysis_db
-    volumes:
-      - ./Dummy_text.txt:/jwt-auth-app/Dummy_text.txt
     networks:
       - jwt-network
 

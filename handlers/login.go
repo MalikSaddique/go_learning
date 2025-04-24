@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/service"
+	"github.com/MalikSaddique/go_learning/models"
+	"github.com/MalikSaddique/go_learning/service"
 	"github.com/gin-gonic/gin"
 )
 

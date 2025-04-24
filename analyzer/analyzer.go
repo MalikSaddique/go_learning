@@ -1,7 +1,8 @@
 package analyzer
 
 import (
-	"os"
+	"io"
+	"net/http"
 )
 
 type Result struct {
@@ -69,10 +70,23 @@ func CombineFunctions(str string) Result {
 	}
 }
 
-func AnalyzeFile(filepath string) (Result, error) {
-	data, err := os.ReadFile(filepath)
+func AnalyzeFile(r *http.Request) (Result, error) {
+	// Parse the multipart form (adjust the max size if needed)
+	// err := r.ParseMultipartForm(10 << 20) // 10 MB
+	// if err != nil {
+	// 	return Result{}, err
+	// }
+
+	file, _, err := r.FormFile("file")
 	if err != nil {
 		return Result{}, err
 	}
+	defer file.Close()
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return Result{}, err
+	}
+
 	return CombineFunctions(string(data)), nil
 }

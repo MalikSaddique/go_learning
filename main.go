@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	connection "github.com/MalikSaddique/go_learning/database"
 	_ "github.com/MalikSaddique/go_learning/docs"
-	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/routes"
+	"github.com/MalikSaddique/go_learning/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"

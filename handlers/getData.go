@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"database/sql"
 	"fmt"
 
-	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/models"
-	utils "github.com/MalikSaddique/go_learning/jwt-auth-go/utils"
+	"github.com/MalikSaddique/go_learning/models"
+	utils "github.com/MalikSaddique/go_learning/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,18 +22,10 @@ import (
 // @Failure      404  "Result not found"
 // @Failure      500  "Database connection failed"
 // @Router       /getdata/{user_id} [get]
-func GetResults(c *gin.Context) {
+func GetResults(c *gin.Context, db *sql.DB) {
 	id := c.Param("user_id")
 
 	offset, limit, page := utils.PaginationHandler(c)
-
-	db, err := connection.DbConnection()
-	if err != nil {
-		fmt.Println("Database connection errors:", err)
-		c.JSON(500, gin.H{"error": "Database connection failed"})
-		return
-	}
-	defer db.Close()
 
 	rows, err := db.Query(`SELECT user_id, words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels 
 	                       FROM results WHERE user_id = $1 ORDER BY user_id LIMIT $2 OFFSET $3`, id, limit, offset)

@@ -2,13 +2,12 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/analyzer"
-	"github.com/MalikSaddique/go_learning/jwt-auth-go/auth"
-	connection "github.com/MalikSaddique/go_learning/jwt-auth-go/database"
+	"github.com/MalikSaddique/go_learning/analyzer"
+	"github.com/MalikSaddique/go_learning/auth"
+	connection "github.com/MalikSaddique/go_learning/database"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
@@ -36,7 +35,7 @@ type UserInfo struct {
 // @Router       /protected [get]
 func ProtectedHandler(c *gin.Context) {
 
-	db, err := connection.DbConnection()
+	_, err := connection.DbConnection()
 	if err != nil {
 		fmt.Println("Database connection error:", err)
 		return
@@ -70,7 +69,7 @@ func ProtectedHandler(c *gin.Context) {
 	}
 	userID := int(userIDFloat)
 
-	result, err := analyzer.AnalyzeFile("/jwt-auth-app/Dummy_text.txt")
+	result, err := analyzer.AnalyzeFile(c.Request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to analyze file"})
 		return
@@ -79,12 +78,12 @@ func ProtectedHandler(c *gin.Context) {
 
 	result.UserID = userID
 
-	err = connection.SaveResult(db, result)
-	if err != nil {
-		log.Println("Failed to save the results:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save result"})
-		return
-	}
+	// err = connection.SaveResult(db, result)
+	// if err != nil {
+	// 	log.Println("Failed to save the results:", err)
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save result"})
+	// 	return
+	// }
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Data saved successfully",
