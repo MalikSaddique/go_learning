@@ -1,19 +1,12 @@
 package routes
 
-import (
-	handler "github.com/MalikSaddique/go_learning/handlers"
-	"github.com/gin-gonic/gin"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-)
-
-func RoutesHandler(r *gin.Engine) {
+func (r *Router) defineRoutes() {
 	// r := gin.Default()
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	r.POST("/signup", handler.SignUp)
-	r.POST("/login")
-	r.GET("/protected", handler.ProtectedHandler)
-	r.GET("/refresh", handler.HandleRefresh)
+	r.Engine.POST("/signup", r.SignUp)
+	r.Engine.POST("/login", r.Login)
+	// r.GET("/protected", handler.ProtectedHandler)
+	// r.GET("/refresh", handler.HandleRefresh)
 	// r.GET("/getdata/:user_id", handler.GetResults)
 }

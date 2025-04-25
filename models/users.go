@@ -5,6 +5,7 @@ type User struct {
 	Id       int      `json:"id"`
 	Email    string   `json:"email"`
 	Password string   `json:"password"`
+	Message  string   `json: "message"`
 	Results  []Result `gorm:"foreignKey:UserID"`
 }
 

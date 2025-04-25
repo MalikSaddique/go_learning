@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
-	connection "github.com/MalikSaddique/go_learning/database"
+	"github.com/MalikSaddique/go_learning/database"
 	_ "github.com/MalikSaddique/go_learning/docs"
 	"github.com/MalikSaddique/go_learning/routes"
-	"github.com/gin-gonic/gin"
+	authserviceimpl "github.com/MalikSaddique/go_learning/service/auth_service/auth_service_impl"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -37,17 +36,16 @@ func main() {
 		log.Fatalf("Error loading .env file: %s", err)
 	}
 
-	Router := gin.Default()
+	conn, err := database.DbConnection()
 
-	connection.DbConnection()
-	if err != nil {
-		fmt.Println("Database connection error:", err)
-		return
-	}
-	fmt.Println("Databse connected successfully")
+	userdb := database.NewStorage(conn)
 
-	routes.RoutesHandler(Router)
+	authService := authserviceimpl.NewUserSErviceImpl(authserviceimpl.NewUserServiceImpl{
+		UserAuth: userdb,
+	})
 
-	// Start the server
-	Router.Run(":8002")
+	router := routes.NewRouter(authService)
+
+	router.Engine.Run(":8002")
+
 }
