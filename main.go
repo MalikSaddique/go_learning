@@ -50,6 +50,4 @@ func main() {
 
 	router.Engine.Run(":8002")
 
-	router.Engine.Run(":8002")
-
 }

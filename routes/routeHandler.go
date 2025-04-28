@@ -6,7 +6,6 @@ import (
 )
 
 func (r *Router) defineRoutes() {
-	// r := gin.Default()
 	r.Engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	r.Engine.POST("/signup", r.SignUp)

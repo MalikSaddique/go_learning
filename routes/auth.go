@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// HandleLogin godoc
+// Login godoc
 // @Summary      Login a user
 // @Description  Authenticate user and return JWT token
 // @Tags         auth
@@ -69,7 +69,7 @@ func (r *Router) SignUp(c *gin.Context) {
 
 }
 
-// HandleRefresh godoc
+// RefreshKey godoc
 // @Summary      Refresh Access Token
 // @Description  Validates refresh token and generates a new access token
 // @Tags         auth
