@@ -19,6 +19,11 @@ func (u *AuthServiceImpl) SignUp(c *gin.Context, req *models.User) *models.User 
 
 	createdUser := u.userAuth.SignUp(c, req)
 
+	if createdUser == nil {
+		fmt.Println("signup error")
+		return nil
+	}
+
 	response := models.User{
 		Email:    createdUser.Email,
 		Password: createdUser.Password,
