@@ -1,4 +1,4 @@
-package utls
+package utils
 
 import (
 	"strconv"
@@ -6,19 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PaginationHandler(c *gin.Context) (int, int, int) {
-	pageStr := c.DefaultQuery("page", "1")
-	limitStr := c.DefaultQuery("limit", "10")
+func PaginationHandler(c *gin.Context) (page int, limit int) {
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
 
-	page, err := strconv.Atoi(pageStr)
-	if err != nil || page < 1 {
+	page, _ = strconv.Atoi(pageStr)
+	limit, _ = strconv.Atoi(limitStr)
+
+	if page <= 0 {
 		page = 1
 	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil || limit < 1 {
+	if limit <= 0 {
 		limit = 10
 	}
-	offset := (page - 1) * limit
-
-	return offset, limit, page
+	return
 }

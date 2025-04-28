@@ -1,14 +1,5 @@
 package handler
 
-import (
-	"database/sql"
-	"fmt"
-
-	"github.com/MalikSaddique/go_learning/models"
-	utils "github.com/MalikSaddique/go_learning/utils"
-	"github.com/gin-gonic/gin"
-)
-
 // GetResults godoc
 // @Summary      Get Analysis Result (Paginated)
 // @Description  Retrieves paginated analyzed text data from the database for the given user ID
@@ -22,51 +13,51 @@ import (
 // @Failure      404  "Result not found"
 // @Failure      500  "Database connection failed"
 // @Router       /getdata/{user_id} [get]
-func GetResults(c *gin.Context, db *sql.DB) {
-	id := c.Param("user_id")
+// func GetResults(c *gin.Context, db *sql.DB) {
+// 	id := c.Param("user_id")
 
-	offset, limit, page := utils.PaginationHandler(c)
+// 	offset, limit, page := utils.PaginationHandler(c)
 
-	rows, err := db.Query(`SELECT user_id, words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels 
-	                       FROM results WHERE user_id = $1 ORDER BY user_id LIMIT $2 OFFSET $3`, id, limit, offset)
-	if err != nil {
-		fmt.Println("Error querying results:", err)
-		c.JSON(500, gin.H{"error": "Query failed"})
-		return
-	}
-	defer rows.Close()
+// 	rows, err := db.Query(`SELECT user_id, words, digits, special_char, lines, spaces, sentences, punctuation, consonants, vowels
+// 	                       FROM results WHERE user_id = $1 ORDER BY user_id LIMIT $2 OFFSET $3`, id, limit, offset)
+// 	if err != nil {
+// 		fmt.Println("Error querying results:", err)
+// 		c.JSON(500, gin.H{"error": "Query failed"})
+// 		return
+// 	}
+// 	defer rows.Close()
 
-	// id = models.User
-	var results []models.Result
-	for rows.Next() {
-		var result models.Result
-		err := rows.Scan(
-			&result.ID,
-			&result.Words,
-			&result.Digits,
-			&result.SpecialChar,
-			&result.Lines,
-			&result.Spaces,
-			&result.Sentences,
-			&result.Punctuation,
-			&result.Consonants,
-			&result.Vowels,
-		)
-		if err != nil {
-			fmt.Println("Row scan error:", err)
-			continue
-		}
-		results = append(results, result)
-	}
+// 	// id = models.User
+// 	var results []models.Result
+// 	for rows.Next() {
+// 		var result models.Result
+// 		err := rows.Scan(
+// 			&result.ID,
+// 			&result.Words,
+// 			&result.Digits,
+// 			&result.SpecialChar,
+// 			&result.Lines,
+// 			&result.Spaces,
+// 			&result.Sentences,
+// 			&result.Punctuation,
+// 			&result.Consonants,
+// 			&result.Vowels,
+// 		)
+// 		if err != nil {
+// 			fmt.Println("Row scan error:", err)
+// 			continue
+// 		}
+// 		results = append(results, result)
+// 	}
 
-	if len(results) == 0 {
-		c.JSON(404, gin.H{"error": "No results found"})
-		return
-	}
+// 	if len(results) == 0 {
+// 		c.JSON(404, gin.H{"error": "No results found"})
+// 		return
+// 	}
 
-	c.JSON(200, gin.H{
-		"page":    page,
-		"limit":   limit,
-		"results": results,
-	})
-}
+// 	c.JSON(200, gin.H{
+// 		"page":    page,
+// 		"limit":   limit,
+// 		"results": results,
+// 	})
+// }

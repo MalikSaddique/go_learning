@@ -9,12 +9,12 @@ type AuthServiceImpl struct {
 	userAuth database.Storage
 }
 
-func NewUserSErviceImpl(input NewUserServiceImpl) authservice.AuthService {
+func NewAuthService(input NewAuthServiceImpl) authservice.AuthService {
 	return &AuthServiceImpl{
 		userAuth: input.UserAuth,
 	}
 }
 
-type NewUserServiceImpl struct {
+type NewAuthServiceImpl struct {
 	UserAuth database.Storage
 }

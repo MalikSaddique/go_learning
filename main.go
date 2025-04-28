@@ -7,6 +7,7 @@ import (
 	_ "github.com/MalikSaddique/go_learning/docs"
 	"github.com/MalikSaddique/go_learning/routes"
 	authserviceimpl "github.com/MalikSaddique/go_learning/service/auth_service/auth_service_impl"
+	userserviceimpl "github.com/MalikSaddique/go_learning/service/user_service/user_service_impl"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -40,11 +41,14 @@ func main() {
 
 	userdb := database.NewStorage(conn)
 
-	authService := authserviceimpl.NewUserSErviceImpl(authserviceimpl.NewUserServiceImpl{
+	authService := authserviceimpl.NewAuthService(authserviceimpl.NewAuthServiceImpl{
 		UserAuth: userdb,
 	})
+	userService := userserviceimpl.NewUserService(userdb)
 
-	router := routes.NewRouter(authService)
+	router := routes.NewRouter(authService, userService)
+
+	router.Engine.Run(":8002")
 
 	router.Engine.Run(":8002")
 

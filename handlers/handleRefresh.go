@@ -11,16 +11,6 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// HandleRefresh godoc
-// @Summary      Refresh Access Token
-// @Description  Validates refresh token and generates a new access token
-// @Tags         auth
-// @Security     BearerAuth
-// @Produce      json
-// @Success      200  "Returns new access token"
-// @Failure      401  "Unauthorized"
-// @Failure      500 "Internal Server Error"
-// @Router       /refresh [get]
 func HandleRefresh(c *gin.Context) {
 	refreshTokenString := c.GetHeader("Authorization")
 
